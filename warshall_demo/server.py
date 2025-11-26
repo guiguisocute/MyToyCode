@@ -2,7 +2,7 @@ import numpy as np
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_folder='static', static_url_path='')
 CORS(app)
 
 
@@ -10,7 +10,6 @@ def warshall_numpy(matrix_list):
     A = np.array(matrix_list, dtype=bool)
     n = len(A)
     for k in range(n):
-        # Update reachability using outer product for the k-th intermediate node
         A = np.logical_or(A, np.outer(A[:, k], A[k, :]))
     return A.astype(int).tolist()
 
