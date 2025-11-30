@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warshall 算法 (CentOS + NumPy)</title>
+    <title>Warshall 算法</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f0f2f5; }
         h1 { color: #333; }
@@ -15,25 +15,36 @@
         .container { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 20px; }
         .matrix-box { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .matrix-content { display: grid; gap: 2px; margin-top: 10px; }
-        .cell { width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #eee; }
+        .cell { width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-size: 14px; background: #eee; cursor: pointer; transition: all 0.2s; }
+        .cell:hover { transform: scale(1.1); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .cell.active { background: #4caf50; color: white; font-weight: bold; }
+        .cell.readonly { cursor: default; }
+        .cell.readonly:hover { transform: none; box-shadow: none; }
     </style>
 </head>
 <body>
-    <h1>Warshall 传递闭包生成器 (NumPy 加速版)</h1>
+    <h1>Warshall 传递闭包生成器</h1>
     <div class="controls">
-        <label>矩阵维度 N: </label>
-        <input type="number" id="inputN" value="5" min="2" max="50">
-        <button id="calcBtn">生成并计算</button>
+        <div style="margin-bottom: 10px;">
+            <label>矩阵维度 N: </label>
+            <input type="number" id="inputN" value="5" min="2" max="50">
+            <button id="generateBtn">随机生成矩阵</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <label>或直接输入矩阵 (用空格/逗号分隔): </label><br>
+            <textarea id="matrixInput" placeholder="例如:&#10;0 1 0&#10;1 0 1&#10;0 1 0" style="width: 300px; height: 80px; margin-top: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace;"></textarea><br>
+            <button id="parseBtn" style="margin-top: 5px;">解析矩阵</button>
+        </div>
     </div>
 
     <div class="container" id="resultArea" style="display:none;">
         <div class="matrix-box">
-            <h3>原始矩阵</h3>
+            <h3>原始矩阵 (点击单元格可编辑)</h3>
             <div id="originalMatrix" class="matrix-content"></div>
+            <button id="calcBtn" style="margin-top: 15px;">计算传递闭包</button>
         </div>
-        <div class="matrix-box">
-            <h3>传递闭包 (Transitive Closure)</h3>
+        <div class="matrix-box" id="closureBox" style="display:none;">
+            <h3>传递闭包</h3>
             <div id="closureMatrix" class="matrix-content"></div>
         </div>
     </div>
