@@ -20,7 +20,7 @@ def batch_split_images(dpi=300):
     # 查找所有图片文件
     image_files = [
         f for f in current_dir.iterdir() 
-        if f.is_file() and f.suffix.lower() in image_extensions
+        if f.is_file() and f.suffix.lower() in image_extensions and f.stem.isdigit() and 1 <= int(f.stem) <= 13
     ]
     
     if not image_files:
@@ -38,8 +38,8 @@ def batch_split_images(dpi=300):
         print(f"{'='*60}")
         print()
         
-        # 为每个图片创建独立的输出文件夹
-        output_dir = current_dir / "output" / image_file.stem
+        # 所有结果输出到同一个文件夹
+        output_dir = current_dir / "output"
         
         splitter = ImageSplitter(str(image_file), dpi=dpi)
         

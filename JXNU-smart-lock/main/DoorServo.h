@@ -28,6 +28,13 @@ public:
    */
   void update();
 
+  /**
+   * 查询当前锁是否处于打开状态
+   * @return true  正在打开或等待关闭
+   * @return false 已关闭（空闲状态）
+   */
+  bool isOpen() const { return _st == OPEN_WAIT; }
+
 private:
   // 状态机枚举：IDLE（空闲），OPEN_WAIT（等待关闭）
   enum State {IDLE, OPEN_WAIT};
